@@ -1,9 +1,10 @@
 *{
-    background-color: #FFD72B;
     list-style: none;
     text-decoration: none;
 }
-
+html{
+    background-image: url(./img/joi_bg.png);
+}
 .main-heading{
     font-family: Poppins;
 }
