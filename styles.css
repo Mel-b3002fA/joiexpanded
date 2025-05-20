@@ -4,9 +4,10 @@
     text-decoration: none;
 }
 
-
-
-
 .main-heading{
     font-family: Poppins;
+}
+
+.main-para{
+    font-family: Merriweather;
 }
