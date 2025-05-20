@@ -2,13 +2,29 @@
     list-style: none;
     text-decoration: none;
 }
-html{
+.body-main{
     background-image: url(./img/joi_bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-y: center;
+}
+
+.header-wrapper{
+    max-width: 100vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-item-para{
+    font-family: Merriweather;
+    font-size: 20px;
 }
 .main-heading{
     font-family: Poppins;
+    font-size: 100px;
 }
 
 .main-para{
     font-family: Merriweather;
+    font-size: 20px;
 }
