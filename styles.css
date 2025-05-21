@@ -14,7 +14,12 @@
     max-width: 100vw;
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
+
+
 
 .header-item-para{
     font-family: Merriweather;
@@ -24,7 +29,7 @@
 .main{
     display: flex;
     justify-content: center;
-    height: 70vh;
+    height: 80vh;
     align-items: center;
 }
 
@@ -37,7 +42,7 @@
 .main-heading{
     font-family: Poppins;
     font-size: 130px;
-/*     line-height: 89%; */
+    line-height: 90%;
     font-weight: 320;
 }
 
@@ -50,6 +55,7 @@
 .main-btn-wrapper{
      display: flex;
      justify-content: space-between;
+     margin-top: 20px;
 }
 
 .main-btn{
@@ -57,5 +63,12 @@
     border-style: solid;
     border-radius: 50px;
     padding: 10px 20px;
+    font-size: 20px;
+    font-family: Merriweather;
+}
+
+.main-btn:hover{
+    background-color: #FFEDA2;
+    border: none;
     font-size: 20px;
 }
