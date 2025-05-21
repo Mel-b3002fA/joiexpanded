@@ -37,10 +37,25 @@
 .main-heading{
     font-family: Poppins;
     font-size: 100px;
+    line-height: 89%;
     font-weight: 320;
 }
 
 .main-para{
     font-family: Merriweather;
+    font-size: 20px;
+}
+
+
+.main-btn-wrapper{
+     display: flex;
+     justify-content: space-between;
+}
+
+.main-btn{
+    background-color: #ffffff00;
+    border-style: solid;
+    border-radius: 50px;
+    padding: 10px 20px;
     font-size: 20px;
 }
