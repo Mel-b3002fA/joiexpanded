@@ -7,6 +7,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-position-y: center;
+    height: 100vh;
 }
 
 .header-wrapper{
@@ -19,9 +20,24 @@
     font-family: Merriweather;
     font-size: 20px;
 }
+
+.main{
+    display: flex;
+    justify-content: center;
+    height: 70vh;
+    align-items: center;
+}
+
+.main-wrapper{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
 .main-heading{
     font-family: Poppins;
     font-size: 100px;
+    font-weight: 320;
 }
 
 .main-para{
