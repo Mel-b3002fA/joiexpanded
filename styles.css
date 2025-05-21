@@ -3,6 +3,12 @@
     text-decoration: none;
 }
 
+html{
+    overflow-y: scroll;
+    scrollbar-color: #000000 #FFEDA2 ;
+    scrollbar-width: thin;
+}
+
 a{
     text-decoration: none;
     color: inherit;
@@ -34,7 +40,7 @@ a{
 .main{
     display: flex;
     justify-content: center;
-    height: 80vh;
+    height: 73vh;
     align-items: center;
 }
 
