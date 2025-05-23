@@ -81,3 +81,18 @@ a{
 .main-btn:hover{
     background-color: #FFEDA2;
 }
+
+
+.about-body{
+    background-color: #FFD72B;
+}
+
+.timeline{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeline-img{
+    width: 20vw;
+}
