@@ -98,12 +98,12 @@ a{
 }
 
 .about-main-text{
-    font-family: Lora;
+    font-family: Merriweather;
     font-size: 20px;
 }
 .about-main-btn{
     background-color: #ffffff00;
-    font-family: Lora;
+    font-family: Merriweather;
 }
 
 .about-timeline{
@@ -165,7 +165,37 @@ a{
     width: 100%;
 }
 
+.masonry-1{
+    padding-top: 70px;
+    padding-bottom: 70px;
+    padding-left: 26px;
+}
+
+.masonry-2{
+    max-height: 290px;
+}
+
+.masonry-3{
+    padding-top: 50px;
+    padding-left: 26px;
+    max-height: 200px;
+}
+
+.masonry-5{
+    padding-top: 50px;
+    padding-left: 26px;
+    max-height: 250px;
+}
+
 .masonry-7{
     max-height: 200px;
+}
+
+.contact-main{
+    font-family: Poppins;
+}
+
+.contact-inf{
+    font-family: Merriweather;
 }
 
