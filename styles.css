@@ -104,6 +104,7 @@ a{
 .about-main-btn{
     background-color: #ffffff00;
     font-family: Merriweather;
+   /* display: flex; */
 }
 
 .about-timeline{
