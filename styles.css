@@ -222,6 +222,16 @@ a{
     max-width: 50vw;
 }
 
+.questions-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.questions-subcontainer{
+    width: 70vw;
+}
+
 .questions-section{
     margin-top: 80px;
 }
@@ -234,6 +244,8 @@ a{
     font-size: 17px;
     padding: 10px 20px;
     border-radius: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .btn2:hover{
