@@ -204,4 +204,36 @@ a{
 
 .tutorial-body{
     background-color: #FFEDA2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
+
+.questions-section{
+    width: 99vw;
+    display: flex;
+    justify-content: center;
+}
+
+.questions-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.btn2{
+    background-color: #FFD72B;
+    border-color: #FFD72B;
+    color: #000000;
+    font-family: Merriweather;
+    font-size: 17px;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+.btn2:hover{
+    background-color: #FFD72B;
+    border-color: #FFD72B;
+    color: #000000;
+    font-family: Merriweather;
+}
+
