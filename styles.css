@@ -152,7 +152,7 @@ a{
 }
 
 .masonry-nothing{
-    @media screen and (max-width: 563px) {
+    @media screen and (max-width: 564px) {
         display: none;
      }
 }
