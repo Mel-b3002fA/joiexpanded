@@ -136,6 +136,9 @@ a{
 
 .about-main-text2{ 
     font-size: 16px;
+    @media screen and (max-width: 560px) {
+      
+     }
 }
 
 .about-main-btn{
