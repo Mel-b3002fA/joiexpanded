@@ -169,7 +169,8 @@ a{
 }
 
 .timeline-img{
-    width: 35vw;
+    width: 45vw;
+    margin-top: 10vh;
     @media screen and (max-width: 560px) {
         width: 80vw;
         
@@ -293,6 +294,10 @@ a{
     width: 100%;
     display: flex;
     justify-content: center;
+    @media screen and (max-width: 560px) {
+  width: 30vw;
+  flex-direction: column;
+    }
 }
 
 .questions-subcontainer{
@@ -301,6 +306,13 @@ a{
 
 .questions-section{
     margin-top: 80px;
+}
+
+.questions-wrapper{
+    display: flex;
+    @media screen and (max-width: 560px) {
+        flex-direction: column;
+    }
 }
 
 .btn2{
@@ -332,4 +344,9 @@ a{
     padding: 10px 20px;
     border-radius: 20px;
     width: fit-content;
+}
+
+.gap-1{
+    @media screen and (max-width: 560px) {
+    }
 }
