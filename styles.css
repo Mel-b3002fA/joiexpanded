@@ -43,6 +43,10 @@ a{
     color: #7fa85a;
 }
 
+.header-item-para2:hover{
+    color: #f8f9ed;
+}
+
 .main{
     display: flex;
     justify-content: center;
@@ -170,6 +174,13 @@ a{
    }
 }
 
+.about-main-btn:hover{
+   background-color: #7fa85a;
+   color: #f4f5fb;
+   border-color: #7fa85a;
+
+}
+
 .about-timeline{
     display: flex;
     justify-content: center;
@@ -207,7 +218,7 @@ a{
 .masonry-item{
     display: inline-block;
     width: 100%;
-    background-color: #FFD72B;
+    background-color: #e6e9c4;
     margin-top: 20px;
     margin-right: 0px;
     border-radius: 18px;
@@ -225,19 +236,19 @@ a{
 }
 
 .masonry-blue{
-    background-color: #94A8F9;
+    background-color: #7fa85a;
     border-radius: 18px;
     display: inline-block;
     width: 100%;
 }
 
 .masonry-2-blue{
-    background-color: #94A8F9;
+    background-color:#7fa85a;
     border-radius: 18px;
 }
 
 .masonry-white{
-    background-color: #f4f5fb;
+    background-color:  #e6e9c4;
     border-radius: 18px;
     display: inline-block;
     width: 100%;
@@ -280,7 +291,7 @@ a{
 
 
 .tutorial-body{
-    background-color: #FFEDA2;
+    background-color: #f8f9ed;
 }
 
 
@@ -317,15 +328,14 @@ a{
 }
 
 .questions-wrapper{
-    display: flex;
     @media screen and (max-width: 560px) {
         flex-direction: column;
     }
 }
 
 .btn2{
-    background-color: #FFD72B;
-    border-color: #FFD72B;
+    background-color: #e6e9c4;
+    border-color: #e6e9c4;
     color: #000000;
     font-family: Merriweather;
     font-size: 17px;
@@ -336,8 +346,8 @@ a{
 }
 
 .btn2:hover{
-    background-color: #FFD72B;
-    border-color: #FFD72B;
+    background-color: #7fa85a;
+    border-color: #7fa85a;
     color: #000000;
     font-family: Merriweather;
 }
