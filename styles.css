@@ -39,6 +39,9 @@ a{
     font-family: Merriweather;
     font-size: 20px;
 }
+.header-item-para:hover{
+    color: #7fa85a;
+}
 
 .main{
     display: flex;
@@ -83,12 +86,14 @@ a{
 }
 
 .main-btn:hover{
-    background-color: #FFEDA2;
+    background-color: #f8f9ed;
+    border-color: #7fa85a;
+    color: #7fa85a;
 }
 
 
 .about-body{
-    background-color: #FFD72B;
+    background-color: #f8f9ed;
 }
 
 .about-main{
@@ -114,7 +119,7 @@ a{
 
 .about-second-wrapper{
     width: 80%;
-    background-color: #FFEDA2 ;
+    background-color: #e6e9c4;
 /*     border: 2px solid black; */
     border-radius: 30px; 
     padding: 10px 20px;
@@ -183,7 +188,7 @@ a{
 
 
 .contact-body{
-    background-color: #FFEDA2;
+    background-color: #f8f9ed;
 }
 
 .contact-masonry{
