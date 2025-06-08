@@ -188,7 +188,7 @@ a{
 }
 
 .timeline-img{
-    width: 45vw;
+    width: 40vw;
     margin-top: 10vh;
     @media screen and (max-width: 560px) {
         width: 80vw;
