@@ -40,8 +40,8 @@
   
 </head>
 <body>
-  <h2 class="header"><a href="" class="joi">Joi</a></h2>
-  <div id="chat-box"></div>
+  <h2 class="joi">Joi 2</h2>
+  <div id="chat-box" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto;"></div>
   <input type="text" id="user-input" placeholder="Type a message..." style="width: 80%;">
   <button onclick="sendMessage()">Send</button>
 
@@ -52,29 +52,29 @@
       if (!message) return;
 
       const chatBox = document.getElementById('chat-box');
-      chatBox.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
+      chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
 
-      const res = await fetch('/chat', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message})
-      });
-      const data = await res.json();
-      chatBox.innerHTML += `<div class="message bot"><strong>LLaMA3:</strong> ${data.reply}</div>`;
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message })
+        });
+
+        const data = await res.json();
+        chatBox.innerHTML += `<div><strong>LLaMA3:</strong> ${data.reply}</div>`;
+      } catch (err) {
+        console.error(err);
+        chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Couldn't reach the server.</div>`;
+      }
+
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-    const backendUrl = window.location.hostname.includes('localhost') 
-  ? 'http://localhost:5000/chat' 
-  : 'https://joi-prototype.onrender.com';
+  </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
-const res = await fetch(backendUrl, {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify({message})
-});
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-
+<!--   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+ -->
 </body>
 </html>
