@@ -12,23 +12,65 @@
 <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="./styles.css">
+   <style>
 
+    body{
+      font-family: Arial; 
+        margin: 40px;
+    }
+      .body { 
+        font-family: Merryweather;
+        background-color:  #e6e9c4;
+      }
 
+      #chat-box { 
+        border: 1px solid #ccc; 
+        padding: 10px; 
+        height: 300px; 
+        overflow-y: auto; 
+        /* background-color:  #e6e9c4; */
+      }
+      .message { 
+        margin-bottom: 10px; 
+      }
 
-    <style>
-      body { font-family: Arial; margin: 40px;}
-      #chat-box { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; background-color: yellow;}
-      .message { margin-bottom: 10px; }
-      .user { color: #000000; }
-      .bot { color: #ffff00; }
-      .header{ font-family: Silkscreen;
+      .user { 
+        color: #000000; 
+      }
+
+      .bot { 
+        color:  #e6e9c4; 
+      }
+
+      .header{ 
+      font-family: Poppins;
       font-size: 57.5px;
       padding-top: 40px;
       margin: 2px;
       text-decoration: none;
       color: var(--clr-text);}
   
-      .joi{text-decoration: none; color: inherit;}
+      .joi{
+        text-decoration: none; 
+        color: black;
+        font-family: Poppins;
+      }
+      
+      .send-btn{
+        background-color: #ffffff00;
+    font-family: Merriweather;
+    border: 2px solid black;
+    border-radius: 30px;
+      }
+
+      .send-btn:hover{
+  /*  background-color: #7fa85a; */
+  background-color: #7fa85a;
+   color: #f4f5fb;
+   border-color: #7fa85a;
+   /* border-color: #7fa85a; */
+
+}
     </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,14 +78,20 @@
   
   <link rel="stylesheet" href="server.py">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-
-  
 </head>
+
+
+
+
+
 <body>
-  <h2 class="joi">Joi 2</h2>
-  <div id="chat-box" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto;"></div>
+  <div class="body">
+  <div id="chat-box" style="border: 1px solid #ccc; padding: 10px; height: 95.5vh; overflow-y: auto;">
+  </div>
+</div>
+  
   <input type="text" id="user-input" placeholder="Type a message..." style="width: 80%;">
-  <button onclick="sendMessage()">Send</button>
+  <button onclick="sendMessage()" class="send-btn">Send</button>
 
   <script>
     async function sendMessage() {
@@ -62,7 +110,7 @@
         });
 
         const data = await res.json();
-        chatBox.innerHTML += `<div><strong>LLaMA3:</strong> ${data.reply}</div>`;
+        chatBox.innerHTML += `<div><strong>Joi:</strong> ${data.reply}</div>`;
       } catch (err) {
         console.error(err);
         chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Couldn't reach the server.</div>`;
