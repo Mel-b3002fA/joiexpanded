@@ -12,19 +12,69 @@
 <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="./styles.css">
+
+
+
+    <style>
+      body { font-family: Arial; margin: 40px;}
+      #chat-box { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; background-color: yellow;}
+      .message { margin-bottom: 10px; }
+      .user { color: #000000; }
+      .bot { color: #ffff00; }
+      .header{ font-family: Silkscreen;
+      font-size: 57.5px;
+      padding-top: 40px;
+      margin: 2px;
+      text-decoration: none;
+      color: var(--clr-text);}
+  
+      .joi{text-decoration: none; color: inherit;}
+    </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Handjet:wght@100..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Pixelify+Sans:wght@400..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="server.py">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+
+  
 </head>
 <body>
-    <header>
-        <div class="header-wrapper">
-          <div class="header-item">
-            <p class="header-item-para"><a href="./index.html">Home</a></p>
-          </div>
-          <div class="header-item">
-            <p class="header-item-para"><a href="./contact.html">Contact</a></p>
-          </div>
-        </div>
-    </header>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <h2 class="header"><a href="" class="joi">Joi</a></h2>
+  <div id="chat-box"></div>
+  <input type="text" id="user-input" placeholder="Type a message..." style="width: 80%;">
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('user-input');
+      const message = input.value.trim();
+      if (!message) return;
+
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      });
+      const data = await res.json();
+      chatBox.innerHTML += `<div class="message bot"><strong>LLaMA3:</strong> ${data.reply}</div>`;
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    const backendUrl = window.location.hostname.includes('localhost') 
+  ? 'http://localhost:5000/chat' 
+  : 'https://joi-prototype.onrender.com';
+
+const res = await fetch(backendUrl, {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({message})
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
 </body>
 </html>
