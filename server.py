@@ -9,10 +9,26 @@ conversation = []
 
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/chat')
+def chat():
     return render_template('chat.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/tutorial')
+def tutorial():
+    return render_template('tutorial.html')
+
 @app.route('/chat', methods=['POST'])
-def chat():
+def process_chat():
     data = request.get_json()
 
     # Validate input
@@ -50,7 +66,6 @@ def chat():
         # Catch errors and return a fallback response
         print("Error from Ollama:", e)
         return jsonify({'reply': "Sorry, something went wrong connecting to the model."}), 500
-
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
