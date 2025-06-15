@@ -62,7 +62,6 @@
             margin-right: 10px;
             background-color: #7ea85a00;
         }
-      
         .send-btn {
             background-color: #ffffff00;
             font-family: Merriweather;
@@ -91,10 +90,10 @@
   <header>
     <div class="header-wrapper">
       <div class="header-item">
-        <p class="header-item-para"><a href="/">Home</a></p>
+        <p class="header-item-para"><a href="index.html">Home</a></p>
       </div>
       <div class="header-item">
-        <p class="header-item-para"><a href="/contact">Contact</a></p>
+        <p class="header-item-para"><a href="contact.html">Contact</a></p>
       </div>
     </div>
 </header>
@@ -107,26 +106,52 @@
     </div>
 
     <script>
+        // Store conversation history
+        let conversation = [];
+
         async function sendMessage() {
             const input = document.getElementById('user-input');
             const message = input.value.trim();
+            const chatBox = document.getElementById('chat-box');
+
             if (!message) return;
 
-            const chatBox = document.getElementById('chat-box');
+            // Add user message to conversation and display
+            conversation.push({ role: 'user', content: message });
             chatBox.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
 
             try {
-                const res = await fetch('/chat', {
+                const res = await fetch('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
+                    headers: {
+                        'Authorization': 'Bearer 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', // Replace with your Hugging Face API token
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        inputs: conversation.map(msg => `${msg.role}: ${msg.content}`).join('\n'),
+                        parameters: { max_new_tokens: 150, return_full_text: false }
+                    })
                 });
 
                 const data = await res.json();
-                chatBox.innerHTML += `<div class="message bot"><strong>Joi:</strong> ${data.reply}</div>`;
+                console.log('API Response:', data); // Debug: Check response in Console
+                let reply;
+                if (data && data[0] && data[0].generated_text) {
+                    reply = data[0].generated_text.trim();
+                } else if (data && data.text) {
+                    reply = data.text.trim(); // Fallback for different response format
+                } else {
+                    reply = null;
+                }
+                if (reply) {
+                    conversation.push({ role: 'assistant', content: reply });
+                    chatBox.innerHTML += `<div class="message bot"><strong>Joi:</strong> ${reply}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Unexpected response from the model: ${JSON.stringify(data)}</div>`;
+                }
             } catch (err) {
-                console.error(err);
-                chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Couldn't reach the server.</div>`;
+                console.error('Error:', err);
+                chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Couldn't reach the model: ${err.message}</div>`;
             }
 
             input.value = '';
