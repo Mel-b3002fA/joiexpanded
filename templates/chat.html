@@ -110,26 +110,6 @@
         // Store conversation history
         let conversation = [];
 
-        // Check if Ollama server is running on page load
-        async function initializeOllama() {
-            const chatBox = document.getElementById('chat-box');
-            try {
-                const res = await fetch('http://localhost:3000/start-ollama');
-                const data = await res.json();
-                if (res.ok && (data.status === 'running' || data.status === 'started')) {
-                    chatBox.innerHTML += `<div style="color: green;">Ollama server is ${data.status}.</div>`;
-                } else {
-                    throw new Error(data.error || 'Failed to start Ollama server.');
-                }
-            } catch (err) {
-                console.error('Error starting Ollama:', err);
-                chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> ${err.message}. Ensure Node.js server and Ollama are installed. See https://ollama.com for setup instructions.</div>`;
-            }
-        }
-
-        // Run initialization on page load
-        window.onload = initializeOllama;
-
         async function sendMessage() {
             const input = document.getElementById('user-input');
             const message = input.value.trim();
