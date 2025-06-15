@@ -91,10 +91,10 @@
   <header>
     <div class="header-wrapper">
       <div class="header-item">
-        <p class="header-item-para"><a href="/">Home</a></p>
+        <p class="header-item-para"><a href="./index.html">Home</a></p>
       </div>
       <div class="header-item">
-        <p class="header-item-para"><a href="contact.html">Contact</a></p>
+        <p class="header-item-para"><a href="./contact.html">Contact</a></p>
       </div>
     </div>
 </header>
@@ -122,36 +122,33 @@
             chatBox.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
 
             try {
-                // Format conversation for Mixtral's instruction template
-                let prompt = '';
+                // Format conversation for LLaMA 3 chat template (Ollama-compatible)
+                let messages = [];
                 for (const msg of conversation) {
-                    if (msg.role === 'user') {
-                        prompt += `[<INST>] ${msg.content} </INST> `;
-                    } else if (msg.role === 'assistant') {
-                        prompt += `${msg.content} `;
-                    }
+                    messages.push({
+                        role: msg.role,
+                        content: msg.content
+                    });
                 }
 
-                const res = await fetch('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x22B-Instruct-v0.1', {
+                // Send request to local Ollama instance
+                const res = await fetch('http://localhost:11434/v1/chat/completions', {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer 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', // Replace with your valid token
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        inputs: prompt,
-                        parameters: {
-                            max_new_tokens: 150,
-                            temperature: 0.7,
-                            top_p: 0.9,
-                            return_full_text: false
-                        }
+                        model: 'llama3', // Replace with 'llama3:8b' or 'llama3:70b' depending on your model
+                        messages: messages,
+                        max_tokens: 150,
+                        temperature: 0.7,
+                        top_p: 0.9
                     })
                 });
 
                 // Read the response body once
                 const text = await res.text();
-                console.log('API Response Text:', text, 'Status:', res.status); // Debug: Log raw response
+                console.log('Ollama API Response Text:', text, 'Status:', res.status); // Debug: Log raw response
 
                 if (!res.ok) {
                     let errorDetail = 'Unknown error';
@@ -161,12 +158,12 @@
                     } catch (e) {
                         errorDetail = text;
                     }
-                    if (res.status === 422) {
-                        throw new Error(`Unprocessable Entity: ${errorDetail}. Please check the input format or parameters.`);
-                    } else if (res.status === 401) {
-                        throw new Error('Invalid or unauthorized API token. Please verify your Hugging Face token.');
+                    if (res.status === 400) {
+                        throw new Error(`Bad Request: ${errorDetail}. Ensure LLaMA 3 is installed and running in Ollama.`);
                     } else if (res.status === 404) {
-                        throw new Error('Model not found. Please check the model name or API endpoint.');
+                        throw new Error('Ollama endpoint not found. Verify that Ollama is running at http://localhost:11434.');
+                    } else if (res.status === 503) {
+                        throw new Error(`Service Unavailable: ${errorDetail}. Ollama may be starting up or the model may not be loaded.`);
                     } else {
                         throw new Error(`API request failed with status ${res.status}: ${errorDetail}`);
                     }
@@ -180,10 +177,10 @@
                 }
 
                 let reply;
-                if (data && data[0] && data[0].generated_text) {
-                    reply = data[0].generated_text.trim();
-                    // Clean up any residual instruction tags
-                    reply = reply.replace(/\[.*?\]/g, '').trim();
+                if (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+                    reply = data.choices[0].message.content.trim();
+                    // Clean up any residual LLaMA 3 tokens, if present
+                    reply = reply.replace(/<\|.*?\|>/g, '').trim();
                 } else {
                     reply = null;
                 }
@@ -192,11 +189,11 @@
                     conversation.push({ role: 'assistant', content: reply });
                     chatBox.innerHTML += `<div class="message bot"><strong>Joi:</strong> ${reply}</div>`;
                 } else {
-                    chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Unexpected response from the model: ${JSON.stringify(data)}</div>`;
+                    chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> Unexpected response from Ollama: ${JSON.stringify(data)}</div>`;
                 }
             } catch (err) {
                 console.error('Error:', err);
-                chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> ${err.message}</div>`;
+                chatBox.innerHTML += `<div style="color: red;"><strong>Error:</strong> ${err.message}. Ensure Ollama is running and LLaMA 3 is installed. See https://ollama.com for setup instructions.</div>`;
             }
 
             input.value = '';
