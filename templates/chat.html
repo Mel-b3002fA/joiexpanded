@@ -104,23 +104,23 @@
   height: 90px;
   border-radius: 50%;
   background-color: #7fa85a;
-  margin-top: 110px;
+  margin-top: 67vh;
 }
 
 /* The actual popup */
 .popup .popuptext {
   visibility: hidden;
-  width: 160px;
+  width: fit-content;
   background-color: #e6e9c4;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 8px 0;
+  padding: 8px 10px 8px 10px;
   position: absolute;
   z-index: 1;
   bottom: 125%;
-  left: 50%;
-  margin-left: -80px;
+  left: -120%;
+  margin-left: 2px;
 }
 
 /* Popup arrow */
@@ -154,11 +154,39 @@
 
 .section-chat{
     display: flex; 
-    max-width: 80vw;
+    max-width: 90vw;
     justify-content: center;
     text-align: center;
     margin-left: 10vw;
     margin-right: 10vw;
+}
+
+.reminder-para{
+    margin-top: 25px;
+    line-height: 130%;
+    color: #000;
+    font-size: 15px;
+    font-family: Merriweather;
+}
+
+.poptext-list{
+  padding-left: 0px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.poptext-list-main{
+    font-size: 20px;
+    color: #000;
+    font-family: Poppins;
+
+}
+
+.poptext-list-para{
+    font-size: 14px;
+    color: #7fa85a;
+    font-family: Poppins;
 }
 
     </style>
@@ -183,8 +211,26 @@
               <button onclick="sendMessage()" class="send-btn">Send</button>
            </div>
        </div>
-       <div class="popup" onclick="myFunction()">Remember while chatting
-            <span class="popuptext" id="myPopup"><p class="poptext">A Simple Popup!</p></span>
+       <div class="popup" onclick="myFunction()">
+        <p class="reminder-para">To keep in mind!</p>
+            <span class="popuptext" id="myPopup">
+                <div class="poptext">
+                    <ul class="poptext-list">
+                        <li class="poptext-list-item">
+                            <h4 class="poptext-list-main">Joi is not a real human!</h4>
+                            <p class="poptext-list-para"><!-- You are chatting with a technical assistant which does not understand what it says.  -->None of the messages are a product of emotions, opinions or believes.</p>
+                        </li>
+                        <li class="poptext-list-item">
+                            <h4 class="poptext-list-main">We do not save conversation history!</h4>
+                            <p class="poptext-list-para">You will not be able to come back to this conversation after closing the page.</p>
+                        </li>
+                        <li>
+                            <h4></h4>
+                            <p></p>
+                        </li>
+                    </ul> 
+                </div>
+            </span>
        </div>
     </section>
 
