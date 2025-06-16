@@ -20,7 +20,7 @@ a{
     background-position-y: center;
     height: 100vh;
     @media screen and (max-width: 560px) {
-        background-image: url(./img/backgroundtel.png);
+        background-image: url(/img/backgroundtel.png);
      }
 }
 
