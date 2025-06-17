@@ -1,0 +1,39 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "server.py",
+        "use": "@vercel/python"
+      },
+      {
+        "src": "static/**",
+        "use": "@vercel/static"
+      },
+      {
+        "src": "img/**",
+        "use": "@vercel/static"
+      },
+      {
+        "src": "chat.js",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/static/(.*)",
+        "dest": "/static/$1"
+      },
+      {
+        "src": "/img/(.*)",
+        "dest": "/img/$1"
+      },
+      {
+        "src": "/chat.js",
+        "dest": "/chat.js"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "server.py"
+      }
+    ]
+  }

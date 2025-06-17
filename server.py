@@ -1,10 +1,18 @@
 from flask import Flask, request, jsonify, render_template
 import ollama
+import os
 
-# Set the base URL for Ollama (Make sure Ollama is running on the correct port)
-ollama_url = "http://localhost:11434/api/chat"
+# Initialize Flask with explicit template and static folders
+app = Flask(__name__, template_folder="templates", static_folder="static")
 
-app = Flask(__name__)
+# Set the base URL for Ollama
+# Note: For Vercel, this cannot be localhost. Host Ollama externally or use a cloud-based AI API.
+# Replace with the external Ollama URL or alternative API endpoint (e.g., xAI Grok API).
+ollama_url = os.environ.get('OLLAMA_URL', 'http://localhost:11434/api/chat')
+
+# Configure Ollama client with the custom URL
+ollama.Client(host=ollama_url)
+
 conversation = []
 
 @app.route('/')
@@ -68,4 +76,6 @@ def process_chat():
         return jsonify({'reply': "Sorry, something went wrong connecting to the model."}), 500
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8000, debug=True)
+    # Bind to 0.0.0.0 and use PORT from environment for Vercel compatibility
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port, debug=False)
