@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: tensorflow-metal
+Version: 1.0.0
+Summary: TensorFlow acceleration for Mac GPUs.
+Home-page: https://developer.apple.com/metal/tensorflow-plugin/
+Download-URL: 
+Author: 
+Author-email: 
+License: MIT License. Copyright © 2020-2021 Apple Inc. All rights reserved.
+Keywords: tensorflow metal plugin
+License-File: LICENSE
+Requires-Dist: wheel (~=0.35)
+Requires-Dist: six (>=1.15.0)
+
+Accelerate training of machine learning models with TensorFlow right on your Mac.
+Install the base tensorflow (tensorflow-macos which is using TensorFlow v2.5)
+and the tensorflow-metal PluggableDevice to accelerate training with Metal on Mac GPUs.
+
+You can learn more about TensorFlow PluggableDevices [here](https://github.com/tensorflow/tensorflow/releases/tag/v2.5.0).
