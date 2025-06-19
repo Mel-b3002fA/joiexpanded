@@ -397,6 +397,9 @@ a{
 }
 
 .questions-wrapper{
+    row-gap: 20px;
+    display: flex;
+    flex-direction: row;
     @media screen and (max-width: 560px) {
         flex-direction: column;
     }
