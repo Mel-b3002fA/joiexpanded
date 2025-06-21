@@ -36,3 +36,6 @@ fi
 
 echo "Starting Flask server..."
 python server.py
+
+ollama serve &
+sleep 5
