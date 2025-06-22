@@ -1,4 +1,5 @@
 absl-py==2.3.0
+setuptools>=65.5.0
 astunparse==1.6.3
 cachetools==5.5.2
 certifi==2025.6.15
@@ -11,14 +12,14 @@ google-pasta==0.2.0
 grpcio==1.73.0
 h5py==3.14.0
 idna==3.10
-jax==0.4.34
-jaxlib==0.4.34
+jax==0.4.14
+jaxlib==0.4.14
+numpy==1.23.5
 keras==2.12.0
 libclang==18.1.1
 Markdown==3.8.2
 MarkupSafe==3.0.2
 ml_dtypes==0.5.1
-numpy==1.24.4
 oauthlib==3.3.1
 opt_einsum==3.4.0
 packaging==25.0
