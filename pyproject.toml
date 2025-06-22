@@ -1,3 +1,22 @@
 [build-system]
 requires = ["setuptools>=65.5.0", "wheel"]
 build-backend = "setuptools.build_meta"
+[build-system]
+requires = ["setuptools>=65.5.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "joisquashed"
+version = "0.1.0"
+description = "Your project description"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [{name = "Your Name"}]
+dependencies = [
+    # Add runtime dependencies here, e.g., "flask" if it's a web app
+]
+
+[tool.setuptools.packages.find]
+include = ["joisquashed*"]  # Replace with your actual package name(s)
+exclude = ["img*", "static*", "templates*", "aretevenv*"]  # Exclude non-package directories
