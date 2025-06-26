@@ -14,13 +14,13 @@ a{
     color: inherit;
 }
 .body-main{
-    background-image: url(/img/background2.png);
+    background-image: url(/img/joibg.png);
     background-repeat: no-repeat;
     background-position: center;
     background-position-y: center;
     height: 100vh;
     @media screen and (max-width: 560px) {
-        background-image: url(/img/backgroundtel.png);
+        background-image: url(/img/joibg2.png);
      }
 }
 
