@@ -19,7 +19,7 @@ a{
     background-position: center;
     background-position-y: center;
     height: 100vh;
-    @media screen and (max-width: 560px) {
+    @media screen and (max-width: 561px) {
         background-image: url(/img/joibg2.png);
      }
 }
