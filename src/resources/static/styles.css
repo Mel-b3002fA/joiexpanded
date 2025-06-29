@@ -105,7 +105,7 @@ a{
     justify-content: center;
     margin-left: 10vw;
     margin-right: 10vw;
-    @media screen and (max-width: 560px) {
+    @media screen and (max-width: 561px) {
         width: 99vw;
      }
 }
