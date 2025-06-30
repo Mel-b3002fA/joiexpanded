@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
@@ -37,240 +37,26 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
+        <!-- Additional dependencies for RAG -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.16.1</version>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-    </plugins>
-</build>
 
 </project>
-```
-
-#### RAG Pipeline (Optional)
-The `ChatbotService.java` currently uses the Ollama API, mirroring `server.py`. To implement the RAG pipeline from `chatbot.ipynb`, we need:
-- Java code to load and split `data.txt`.
-- OpenAI API calls for embeddings and completions.
-- A simple in-memory vector store for similarity search.
-
-Here’s a simplified RAG implementation to add to `ChatbotService.java` (Note: This requires additional dependencies and `data.txt`):
-
-```java
-package com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Service
-public class ChatbotService {
-
-    private final OllamaClient ollamaClient;
-    private final RestTemplate restTemplate;
-    private final List<Message> conversation = new ArrayList<>();
-    private final List<String> chunks = new ArrayList<>();
-    private final String openaiApiKey;
-
-    public ChatbotService(OllamaClient client, @Value("${openai.api.key}") String apiKey) {
-        this.ollamaClient = client;
-        this.restTemplate = new RestTemplate();
-        this.openaiApiKey = apiKey;
-        loadData();
-    }
-
-    private void loadData() {
-        try {
-            String data = Files.readString(Path.of("src/main/resources/data.txt"));
-            // Simple chunking (200 chars, 50 overlap)
-            for (int i = 0; i < data.length(); i += 150) {
-                int end = Math.min(i + 200, data.length());
-                chunks.add(data.substring(i, end));
-            }
-        } catch (Exception e) {
-            logger.error("Failed to load data.txt", e);
-        }
-    }
-
-    private List<String> retrieve(String query) {
-        // Placeholder: Return top 3 chunks containing query terms
-        return chunks.stream()
-                .filter(chunk -> chunk.toLowerCase().contains(query.toLowerCase()))
-                .limit(3)
-                .collect(Collectors.toList());
-    }
-
-    public String getResponse(String userMessage) {
-        // RAG pipeline
-        List<String> context = retrieve(userMessage);
-        String prompt = """
-                You are an AI-powered chatbot designed to provide
-                information and assistance for customers
-                based on the context provided to you only.
-                
-                Context: %s
-                Question: %s
-                """.formatted(String.join("\n", context), userMessage);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + openaiApiKey);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("model", "gpt-3.5-turbo");
-        request.put("messages", List.of(Map.of("role", "user", "content", prompt)));
-
-        HttpEntity<Map> entity = new HttpEntity<>(request, headers);
-
-        ResponseEntity<Map> response = restTemplate.postForEntity(
-                "https://api.openai.com/v1/chat/completions", entity, Map.class);
-
-        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            List<Map> choices = (List<Map>) response.getBody().get("choices");
-            String reply = (String) choices.get(0).get("message").get("content");
-            conversation.add(new Message("user", userMessage));
-            conversation.add(new Message("assistant", reply));
-            return reply;
-        }
-        // Fallback to Ollama
-        return ollamaClient.chat(conversation);
-    }
-}
-```
-
-**Additional Dependencies for RAG** (Add to `pom.xml`):
-```xml
-<dependency>
-    <groupId>com.squareup.okhttp3</groupId>
-    <artifactId>okhttp</artifactId>
-    <version>4.12.0</version>
-</dependency>
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.16.1</version>
-</dependency>
-```
-
-Add to `application.properties`:
-```properties
-openai.api.key=${OPENAI_API_KEY}
-```
-
-**Note**: The RAG implementation is simplified (keyword-based retrieval). For a FAISS-like vector store, consider integrating a Java library like [Lucene](https://lucene.apache.org/) or an external service, which increases complexity.
-
-#### GitHub Actions Workflow
-Deploy the static frontend to GitHub Pages and the Java backend to Render.
-
-```yaml
----
-name: Deploy
-
-on:
-on:
-  on:
-    push:
-      branches:
-        - main:main
-
-jobs:
-  deploy-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIvesJamesIves/github-pages-deploy-action@v4
-        with:
-          folder: src/main/resources/static
-
-  deploy-backend:
-    runs-on: ubuntu-latest
-    env:
-      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY}}
-      OLLAMA_URL: ${{ secrets.OLLAMA_URL}}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY}}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build with Maven
-        run: mvn clean package
-
-      - name: Deploy to Render
-        run: |
-          curl -X POST \
-          -H "Authorization: Bearer $RENDER_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{"serviceId":"srv-your-service-id"}' \
-          https://api.render.com/v1/services/srv-your-service-id/deploys
-```
-
-### Hosting Setup
-1. **GitHub Pages**:
-   - Push the project to a GitHub repository.
-   - Enable GitHub Pages in the repository settings, pointing to the `gh-pages` branch.
-   - The frontend (`templates`, `static`, `chat.js`) will be served statically.
-
-2. **Backend**:
-   - Sign up for [Render.com](https://render.com/) and create a new Web Service.
-   - Link your GitHub repository to Render.
-   - Set environment variables in Render:
-     - `OLLAMA_URL`: Your Ollama API endpoint.
-     - `OPENAI_API_KEY`: Your OpenAI API key (if using RAG).
-   - Add your Render API key and service ID to GitHub secrets (`RENDER_API_KEY`, `srv-your-service-id`).
-   - Update `chat.js` to point to the Render URL (e.g., `https://your-app.render.com/chat/v1/`).
-
-3. **Running Locally**:
-   - Install Maven and Java 17.
-   - Set environment variables: `OLLAMA_URL`, `OPENAI_API_KEY`.
-   - Place `data.txt` in `src/main/resources/data.txt` (if using RAG).
-   - Run: `mvn spring-boot:run`.
-   - Access: `http://localhost:8080/`.
-
-### Notes
-- **Ollama vs. RAG**:
-  - The current implementation uses the Ollama API (like `server.py`) for simplicity, as it’s used in the Flask endpoint.
-  - The RAG pipeline (from `chatbot.ipynb`) is provided as an optional. Enable it by updating `ChatbotService.java` and adding dependencies if you need context-aware answers from `data.txt`.
-  - If `data.txt` is large or requires true embeddings, consider an external vector store (e.g., Elasticsearch) or simplify to keyword search.
-- **chat.js**:
-  - Assumed to send `POST `{ "message": "user input" }` to ` expect `/chat` and expects `{ "response": "bot reply" }`. Share `chat.js` if it needs adjustments.
-- **Conversation**:
-  - In-memory conversation history is used (like `server.py`). For production use, consider a database (e.g., H2, Redis) for persistence.
-- **Dependencies**:
-  - `requirements.txt` includes TensorFlow libraries, but they’re likely unused in `server.py` or `chatbot.ipynb`. If needed, integrate DeepJavaLibrary (DJL) in Java.
-- **Limitations**:
-  - The Java RAG pipeline is simplified. For production use, optimize the vector store and embeddings.
-  - GitHub Pages requires a separate server (Render) for the backend.
-  - `data.txt` wasn’t provided, so the RAG assumes a placeholder file.
-
-### Testing
-1. **Local**:
-   - Run `mvn spring-boot:run`.
-   - Test endpoints (e.g., `curl -X POST http://localhost:/8080/chat -H "Content-Type: application/json" -d '{"message":"Hello"}'`).
-   - Verify templates load (e.g., `http://localhost:8080/chat`).
-2. **Deployed**:
-   - Push to GitHub to trigger the Actions workflow.
-   - Check GitHub Pages for the frontend and Render logs for the backend.
-   - Test the `/chat` API via `chat.js`.
-
-### Next Steps
-- Share `chat.js` if it needs adjustments for the Java endpoint.
-- Provide `data.txt` if the RAG pipeline is critical and needs optimization.
-- Specify if you want to prioritize Ollama (simpler) or RAG (more complex).
-- Confirm the hosting provider (e.g., Render, Heroku, AWS) for the backend.
-- Let me know if you need help setting up Render or debugging the deployment!
-
-The Java code above replaces `server.py` and provides a foundation for `chatbot.ipynb`. The project is ready for GitHub, with static content on Pages and the backend on Render. Share additional details for further refinements!
