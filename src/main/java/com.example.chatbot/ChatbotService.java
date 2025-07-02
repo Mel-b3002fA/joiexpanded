@@ -13,7 +13,7 @@ public class ChatbotService {
     @Autowired
     private OllamaClient ollamaClient;
 
-    private final List<Message> conversation = new ArrayList<>(); // In-memory conversation history
+    private final List<Message> conversation = new ArrayList<>();
 
     public String getResponse(String userMessage) {
         conversation.add(new Message("user", userMessage));
