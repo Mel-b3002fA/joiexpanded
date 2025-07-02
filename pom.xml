@@ -18,6 +18,7 @@
         <java.version>17</java.version>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,6 +38,12 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
+         <!-- Other dependencies -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>3.1.0</version> <!-- Match your Spring Boot version -->
+    </dependency>
         <!-- For OpenAI API calls -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
