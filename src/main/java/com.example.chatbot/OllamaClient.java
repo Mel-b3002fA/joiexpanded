@@ -57,6 +57,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -65,17 +66,19 @@ public class OllamaClient {
 
     private static final Logger logger = LoggerFactory.getLogger(OllamaClient.class);
 
-    @Value("${ollama.url}")
-    private String ollamaUrl;
+    private final String ollamaUrl;
+    private final RestTemplate restTemplate;
 
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    public String chat(List<Message> conversation) {
+    public OllamaClient(@Value("${ollama.url}") String ollamaUrl) {
+        this.ollamaUrl = ollamaUrl;
+        this.restTemplate = new RestTemplate();
         if (ollamaUrl == null || ollamaUrl.isEmpty()) {
             logger.error("OLLAMA_URL is not set");
             throw new IllegalStateException("OLLAMA_URL is not set");
         }
+    }
 
+    public String chat(List<Message> conversation) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

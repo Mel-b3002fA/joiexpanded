@@ -1,4 +1,7 @@
+com/example/chatbot/ChatbotController.class
 com/example/chatbot/ChatbotApplication.class
-com/example/chatbot/model/Message.class
 com/example/chatbot/model/OllamaRequest.class
 com/example/chatbot/model/OllamaResponse.class
+com/example/chatbot/model/Message.class
+com/example/chatbot/OllamaClient.class
+com/example/chatbot/ChatbotService.class
