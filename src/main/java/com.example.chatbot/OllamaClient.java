@@ -1,53 +1,5 @@
-/* package com.example.chatbot;
-
-import com.example.chatbot.model.Message;
-import com.example.chatbot.model.OllamaRequest;
-import com.example.chatbot.model.OllamaResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-
-@Component
-public class OllamaClient {
-
-    @Value("${ollama.url}")
-    private String ollamaUrl;
-
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    public String chat(List<Message> conversation) {
-        if (ollamaUrl == null || ollamaUrl.isEmpty()) {
-            throw new IllegalStateException("OLLAMA_URL is not set");
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        OllamaRequest request = new OllamaRequest("llama3", conversation);
-        HttpEntity<OllamaRequest> entity = new HttpEntity<>(request, headers);
-
-        ResponseEntity<OllamaResponse> response = restTemplate.postForEntity(
-                ollamaUrl + "/api/chat", entity, OllamaResponse.class);
-
-        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null
-                && response.getBody().getMessage() != null) {
-            return response.getBody().getMessage().getContent();
-        } else {
-            throw new RuntimeException("Unexpected response from Ollama: " + response.getBody());
-        }
-    }
-} */
-
-
-
 package com.example.chatbot;
 
-import com.example.chatbot.model.Message;
-import com.example.chatbot.model.OllamaRequest;
-import com.example.chatbot.model.OllamaResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +11,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class OllamaClient {
@@ -78,25 +31,24 @@ public class OllamaClient {
         }
     }
 
-    public String chat(List<Message> conversation) {
+    public String generateResponse(String prompt) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            OllamaRequest request = new OllamaRequest("llama3", conversation);
-            HttpEntity<OllamaRequest> entity = new HttpEntity<>(request, headers);
+            Map<String, String> request = new HashMap<>();
+            request.put("model", "llama3");
+            request.put("prompt", prompt);
 
-            logger.debug("Sending request to Ollama at {} with model llama3 and {} messages",
-                    ollamaUrl, conversation.size());
+            logger.debug("Sending request to Ollama at {}/api/generate with model llama3 and prompt: {}",
+                    ollamaUrl, prompt);
 
-            ResponseEntity<OllamaResponse> response = restTemplate.postForEntity(
-                    ollamaUrl + "/api/chat", entity, OllamaResponse.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    ollamaUrl + "/api/generate", new HttpEntity<>(request, headers), String.class);
 
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null
-                    && response.getBody().getMessage() != null) {
-                String content = response.getBody().getMessage().getContent();
-                logger.debug("Received response from Ollama: {}", content);
-                return content;
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                logger.debug("Received response from Ollama: {}", response.getBody());
+                return response.getBody();
             } else {
                 logger.warn("Unexpected response from Ollama: status={}, body={}",
                         response.getStatusCode(), response.getBody());

@@ -1,23 +1,22 @@
 package com.example.chatbot;
 
-import com.example.chatbot.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class ChatbotService {
+    private final OllamaClient ollamaClient;
+
     @Autowired
-    private OllamaClient ollamaClient;
+    public ChatbotService(OllamaClient ollamaClient) {
+        this.ollamaClient = ollamaClient;
+    }
 
-    private final List<Message> conversation = new ArrayList<>();
-
-    public String getResponse(String userMessage) {
-        conversation.add(new Message("user", userMessage));
-        String reply = ollamaClient.chat(conversation);
-        conversation.add(new Message("assistant", reply));
-        return reply;
+    public String getResponse(String message) {
+        try {
+            return ollamaClient.generateResponse(message);
+        } catch (Exception e) {
+            return "Sorry, something went wrong connecting to the model.";
+        }
     }
 }
