@@ -73,6 +73,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity; // Added import
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -101,31 +102,31 @@ public class OllamaClient {
     }
 
     public String generateResponse(String prompt) {
-        Map<String, String> request = new HashMap<>();
-        request.put("model", model);
-        request.put("prompt", prompt);
+    Map<String, String> request = new HashMap<>();
+    request.put("model", model);
+    request.put("prompt", prompt);
 
-        logger.debug("Sending request to Ollama at {}/api/generate with model {} and prompt: {}",
-                ollamaUrl, model, prompt);
+    logger.debug("Sending request to Ollama at {}/api/generate with model {} and prompt: {}",
+            ollamaUrl, model, prompt);
 
-        return webClient.post()
-                .uri("/api/generate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .retrieve()
-                .bodyToFlux(String.class)
-                .filter(line -> !line.trim().isEmpty())
-                .map(line -> {
-                    try {
-                        JsonNode node = objectMapper.readTree(line);
-                        return node.get("response").asText();
-                    } catch (Exception e) {
-                        logger.error("Failed to parse response line: {}", line, e);
-                        return "";
-                    }
-                })
-                .collectList()
-                .map(list -> String.join("", list))
-                .block();
-    }
+    return webClient.post()
+            .uri("/api/generate")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .retrieve()
+            .bodyToFlux(String.class)
+            .filter(line -> !line.trim().isEmpty())
+            .map(line -> {
+                try {
+                    JsonNode node = objectMapper.readTree(line);
+                    return node.get("response").asText();
+                } catch (Exception e) {
+                    logger.error("Failed to parse response line: {}", line, e);
+                    return "";
+                }
+            })
+            .collectList()
+            .map(list -> String.join("", list))
+            .block();
+}
 }
