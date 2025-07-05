@@ -1,14 +1,32 @@
+/* package com.example.chatbot;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class OllamaClient {
-    private final String ollamaUrl;
-    private final WebClient webClient;
+    private static final Logger logger = LoggerFactory.getLogger(OllamaClient.class);
 
-    public OllamaClient(@Value("${ollama.url}") String ollamaUrl) {
+    private final String ollamaUrl;
+    private final String model;
+    private final WebClient webClient;
+    private final ObjectMapper objectMapper;
+
+    public OllamaClient(@Value("${ollama.url}") String ollamaUrl, @Value("${ollama.model:llama3}") String model) {
         this.ollamaUrl = ollamaUrl;
+        this.model = model;
         this.webClient = WebClient.builder().baseUrl(ollamaUrl).build();
+        this.objectMapper = new ObjectMapper();
         if (ollamaUrl == null || ollamaUrl.isEmpty()) {
             logger.error("OLLAMA_URL is not set");
             throw new IllegalStateException("OLLAMA_URL is not set");
@@ -17,11 +35,11 @@ public class OllamaClient {
 
     public String generateResponse(String prompt) {
         Map<String, String> request = new HashMap<>();
-        request.put("model", "llama3");
+        request.put("model", model);
         request.put("prompt", prompt);
 
-        logger.debug("Sending request to Ollama at {}/api/generate with model llama3 and prompt: {}",
-                ollamaUrl, prompt);
+        logger.debug("Sending request to Ollama at {}/api/generate with model {} and prompt: {}",
+                ollamaUrl, model, prompt);
 
         return webClient.post()
                 .uri("/api/generate")
@@ -29,20 +47,18 @@ public class OllamaClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToFlux(String.class)
-                .collectList()
-                .map(responses -> {
-                    // Combine streaming responses
-                    StringBuilder combined = new StringBuilder();
-                    for (String response : responses) {
-                        // Parse each JSON object and extract "response" field
-                        // This is a simplified example; use a JSON parser like Jackson
-                        if (response.contains("\"response\"")) {
-                            String content = response.split("\"response\":\"")[1].split("\"")[0];
-                            combined.append(content);
-                        }
+                .filter(line -> !line.trim().isEmpty())
+                .map(line -> {
+                    try {
+                        JsonNode node = objectMapper.readTree(line);
+                        return node.get("response").asText();
+                    } catch (Exception e) {
+                        logger.error("Failed to parse response line: {}", line, e);
+                        return "";
                     }
-                    return combined.toString();
                 })
+                .collectList()
+                .map(list -> String.join("", list))
                 .block();
     }
-}
+} */

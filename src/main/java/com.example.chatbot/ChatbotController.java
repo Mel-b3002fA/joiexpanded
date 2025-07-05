@@ -4,57 +4,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Controller
+@RestController
 public class ChatbotController {
-
     private static final Logger logger = LoggerFactory.getLogger(ChatbotController.class);
+    private final ChatbotService chatbotService;
 
     @Autowired
-    private ChatbotService chatbotService;
-
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
-    @GetMapping("/chat")
-    public String chat() {
-        return "chat";
-    }
-
-    @GetMapping("/about")
-    public String about() {
-        return "about";
-    }
-
-    @GetMapping("/contact")
-    public String contact() {
-        return "contact";
-    }
-
-    @GetMapping("/tutorial")
-    public String tutorial() {
-        return "tutorial";
+    public ChatbotController(ChatbotService chatbotService) {
+        this.chatbotService = chatbotService;
     }
 
     @PostMapping("/chat")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> processChat(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> request) {
         if (!request.containsKey("message")) {
             logger.error("Invalid message received");
             return ResponseEntity.badRequest().body(Map.of("reply", "Invalid message"));
         }
 
-        String userMessage = request.get("message");
-        logger.info("User said: {}", userMessage);
+        String message = request.get("message");
+        logger.info("User said: {}", message);
 
         try {
-            String reply = chatbotService.getResponse(userMessage);
+            String reply = chatbotService.getResponse(message);
             logger.info("Joi replied: {}", reply);
             return ResponseEntity.ok(Map.of("reply", reply));
         } catch (Exception e) {
